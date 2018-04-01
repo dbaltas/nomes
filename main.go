@@ -14,25 +14,25 @@ import (
 
 func main() {
 	var inFile string
+	var configFile string
 
 	flag.StringVar(&inFile, "in", "", "the input file in html format")
+	flag.StringVar(&configFile, "config", "config.*", "filename for configuration")
 	flag.Parse()
 
 	if inFile == "" {
-		log.Print("no in file defined")
+		log.Println("no in file defined")
 		flag.Usage()
-		os.Exit(1)
+		return
 	}
 
 	f, err := os.Open(inFile)
 	if err != nil {
-		log.Printf("failed to open file %s", inFile)
+		log.Printf("failed to open file %s\n", inFile)
 		panic(err)
 	}
 
-	fmt.Printf("\n\n")
-
-	results := parser.ProcessPatterns(f, configMap())
+	results := parser.ProcessPatterns(f, configMap(configFile))
 
 	// hack to trim spaces
 	// due to inability to use normalize-space()
@@ -48,8 +48,11 @@ func main() {
 	fmt.Println(string(jsonString))
 }
 
-func configMap() map[string]string {
+func configMap(configFile string) map[string]string {
 	viper.AddConfigPath(".")
+	if configFile != "" {
+		viper.SetConfigFile(configFile)
+	}
 	err := viper.ReadInConfig() // Find and read the config file
 	if err != nil {             // Handle errors reading the config file
 		panic(fmt.Errorf("fatal error config file: %s", err))
