@@ -1,0 +1,6 @@
+mappings:
+  main.url: "//head/meta[@property='og:url']/@content"
+  main.results: "//div[@id='mainbar']//h2"
+  main.maxpage: "//div[@id='mainbar']//span[@class='page-numbers dots']/following::*/span"
+  main.second.votes: "//div[@class='question-summary search-result']//div[@data-position='2']//div[@class='votes answered']//strong"
+  main.second.url: "//div[@class='question-summary search-result']//a/@href"

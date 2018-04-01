@@ -1,1 +1,5 @@
+config.*
+*.htm
+*.html
+#binary
 nomes
