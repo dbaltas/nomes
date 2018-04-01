@@ -1,10 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/dbaltas/nomes/parser"
 	"github.com/spf13/viper"
@@ -31,9 +33,19 @@ func main() {
 	fmt.Printf("\n\n")
 
 	results := parser.ProcessPatterns(f, configMap())
+
+	// hack to trim spaces
+	// due to inability to use normalize-space()
 	for k, v := range results {
-		fmt.Printf("%s: %s\n", k, v)
+		results[k] = strings.TrimSpace(v)
 	}
+
+	jsonString, err := json.MarshalIndent(results, "", "  ")
+	if err != nil {
+		fmt.Printf("error json marshaling: %s\n", err)
+		return
+	}
+	fmt.Println(string(jsonString))
 }
 
 func configMap() map[string]string {
